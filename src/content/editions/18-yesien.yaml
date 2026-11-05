@@ -1,8 +1,12 @@
 number: 18
 name: "Yesień"
 date: 2026-10-19T17:00:00+02:00
-venue: { name: "Klub Hormon", address: "Monte Cassino 6, Szczecin" }
+venue: { name: "Klub Hormon", address: "Monte Cassino 6, 70-464 Szczecin" }
 banner: /img/editions/10010-yesien.png
 registrationUrl: "https://www.eventbrite.com/e/zs-bit-10010-yesien-tickets-2001566131179"
 sponsors: ["Demant Polska", "Tietoevry", "Technopark Pomerania"]
-note: "Program edycji nie został jeszcze przeniesiony do archiwum."
+talks:
+  - { speaker: "Grzegorz Nowiński", title: "Abstract Syntax Tree: od linterów po transpilację" }
+  - { speaker: "Łukasz Roszak", title: "Jak (nie?) zarobić na AI – lekcje z pola bitwy" }
+  - { speaker: "Piotr Brzyski", title: "JDG w erze AI: kiedy jedna osoba staje się organizacją i czy one-man-army ma sens?" }
+# TODO: program wg zapowiedzi z Eventbrite („agenda będzie sukcesywnie uzupełniana”), do potwierdzenia, czy kompletny.
