@@ -1,0 +1,11 @@
+number: 11
+name: "Cumulus"
+date: 2024-04-15
+banner: /img/editions/1011.png
+venue: { name: "Technopark Pomerania", address: "ul. Cyfrowa 6, Szczecin" }
+hosts: ["Paweł Żal", "Paweł Sukiennik"]
+talks:
+  - { speaker: "Kamil Mrzygłód", title: "Late to the party – czy nadal opłaca się inwestować w chmurę?" }
+  - { speaker: "Tomasz Żmuda", title: "Audyt w trójkącie nieskończoności produktu cyfrowego" }
+  - { speaker: "Łukasz Roszak", title: "Inżynieria oprogramowania wspierana sztuczną inteligencją" }
+partners: ["Demant Polska", "Tietoevry", "Jit Team", "Technopark Pomerania", "Klaster IT"]

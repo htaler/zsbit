@@ -1,0 +1,10 @@
+number: 1
+name: "Początek"
+date: 2021-07-05
+banner: /img/editions/1.jpg
+venue: { name: "Klub Hormon", address: "Monte Cassino 6, Szczecin" }
+hosts: ["Mikołaj Milewski"]
+talks:
+  - { speaker: "Maciej Podyma", title: "Dlaczego Elon Musk potrzebuje Bitcoina do rozbudowy Starlinka" }
+  - { speaker: "Mikołaj Milewski", title: "SOLIDny kod dla każdego!" }
+partners: ["Demant Polska", "Tietoevry"]

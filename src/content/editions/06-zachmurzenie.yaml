@@ -1,0 +1,10 @@
+number: 6
+name: "Zachmurzenie"
+date: 2022-09-19
+banner: /img/editions/110.jpg
+venue: { name: "Klub Hormon", address: "Monte Cassino 6, Szczecin" }
+hosts: ["Hubert Taler", "Łukasz Roszak"]
+talks:
+  - { speaker: "Paweł Sołtysik", title: "ANTLR" }
+  - { speaker: "Rafał Pawlaszek", title: "Innovate faster and with more confidence with AWS CDK" }
+partners: ["intive", "Demant Polska", "Tietoevry", "Klaster IT Pomorze Zachodnie"]

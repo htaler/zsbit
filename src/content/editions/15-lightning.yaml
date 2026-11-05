@@ -1,0 +1,17 @@
+number: 15
+name: "Lightning"
+date: 2025-09-22
+venue: { name: "Technopark Pomerania", address: "ul. Cyfrowa 6, Szczecin" }
+banner: /img/editions/1111.jpg
+hosts: ["Magdalena Milewska", "Mikołaj Milewski"]
+talks:
+  - { speaker: "Hubert Taler", title: "Niedofinansowane projekty, na których stoi świat", kind: lightning }
+  - { speaker: "Fabian Sprycha", title: "Magia liczb", kind: lightning }
+  - { speaker: "Milena Michalska", title: "Dlaczego modelarstwo rakietowe to najlepsze hobby we wszechświecie?", kind: lightning }
+  - { speaker: "Paweł Żal", title: "Ile twarzy ma abstrakcja?", kind: lightning }
+  - { speaker: "Piotr Kołakowski", title: "Agent AI – kolega z pracy, którego jeszcze nie znasz", kind: lightning }
+  - { speaker: "Aleksandra Kowalczykowska", title: "Krótka opowieść o przełamywaniu barier", kind: lightning }
+  - { speaker: "Grzegorz Nowiński", title: "Kiedy legacy nie chce umrzeć?", kind: lightning }
+  - { speaker: "Jakub Gibowski", title: "Polaroidy, retronostalgia i magia niedoskonałości", kind: lightning }
+sponsors: ["Demant Polska", "Technopark Pomerania"]
+partners: ["Tietoevry"]

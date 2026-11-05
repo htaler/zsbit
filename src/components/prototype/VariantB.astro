@@ -1,0 +1,234 @@
+---
+// PROTOTYP: Wariant B „Changelog”. Jasny papier, monospace, strona jak README, a archiwum jak `git log`
+// z pełnym programem i filtrem po prelegentach i tematach.
+import type { Edition } from '../../lib/editions';
+import { fmtShort } from '../../lib/editions';
+interface Props { editions: Edition[]; latest: Edition; stats: { editions: number; talks: number; speakers: number; since: number }; nextBinary: string }
+const { editions, latest, stats, nextBinary } = Astro.props;
+const time = latest.date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Warsaw' });
+const kindLabel = { talk: 'talk', lightning: 'light', panel: 'panel' } as const;
+---
+
+<div class="b">
+  <aside class="side">
+    <a href="#" class="logo"><img src="/img/logo.svg" alt="ZS BIT" width="72" height="49" /></a>
+    <nav>
+      <a href="#b-status">./status</a>
+      <a href="#b-log">./archiwum</a>
+      <a href="#b-cfp">./zglos-prelekcje</a>
+      <a href="#b-subscribe">./newsletter</a>
+      <a href="#b-wesprzyj">./wesprzyj</a>
+    </nav>
+    <div class="bigbin" aria-hidden="true">{latest.binary.split('').map((d) => <span class={d === '1' ? 'on' : ''}>{d}</span>)}</div>
+  </aside>
+
+  <main class="main">
+    <section class="readme">
+      <p class="path">~/zsbit/README.md</p>
+      <h1>Spotkania branży IT <em>w&nbsp;Szczecinie.</em></h1>
+      <p class="lede">Prelekcje, lightning talki i rozmowy przy jednym stole. Za darmo, bez rekrutacji, bez gier na telefonach. Od {stats.since} roku: {stats.editions} edycji, {stats.talks} wystąpień, {stats.speakers} prelegentów.</p>
+    </section>
+
+    <section class="status" id="b-status">
+      <p class="cmd"><span class="pr">$</span> zsbit status</p>
+      <div class="only-upcoming out">
+        <dl>
+          <dt>next</dt><dd><b>{latest.binary} · {latest.name}</b></dd>
+          <dt>kiedy</dt><dd>{fmtShort(latest.date)}, {time}</dd>
+          <dt>gdzie</dt><dd>{latest.venue?.name}{latest.venue?.address && `, ${latest.venue.address}`}</dd>
+          <dt>miejsca</dt><dd><span class="bar"><span style="width:69%"></span></span> 83/120 zajęte <span class="demo-tag">dane przykładowe</span></dd>
+        </dl>
+        <a class="btn" href={latest.registrationUrl}>[ zarezerwuj bezpłatne miejsce ]</a>
+      </div>
+      <div class="only-between out">
+        <dl>
+          <dt>next</dt><dd><b>{nextBinary} · ???</b> <span class="blink">▍</span></dd>
+          <dt>kiedy</dt><dd>wkrótce, data najpierw w newsletterze</dd>
+          <dt>cfp</dt><dd class="ok">otwarte: zbieramy tematy</dd>
+        </dl>
+        <a class="btn" href="#b-subscribe">[ powiadom mnie ]</a>
+        <a class="btn ghost" href="#b-cfp">[ zgłoś prelekcję ]</a>
+      </div>
+    </section>
+
+    <section class="log" id="b-log">
+      <div class="log-head">
+        <p class="cmd"><span class="pr">$</span> git log --editions</p>
+        <label class="filter"><span class="sr-only">Filtruj</span><span class="pr">grep</span><input type="search" placeholder="np. AI, Korozej, CI/CD" data-b-filter /></label>
+      </div>
+      <ol class="commits">
+        {editions.map((e) => (
+          <li class="commit" data-b-edition>
+            <div class="c-head">
+              <span class="hash">{e.binary}</span>
+              <span class="c-name">{e.name}</span>
+              <span class="c-date">{fmtShort(e.date)}</span>
+              <span class="c-venue">{e.venue?.name ?? ''}</span>
+            </div>
+            <ul class="diff">
+              {e.talks.map((t) => (
+                <li data-b-talk data-q={`${t.speaker} ${t.title}`.toLowerCase()}>
+                  <span class="plus">+</span><span class={`kind k-${t.kind}`}>{kindLabel[t.kind]}</span>
+                  <span><b>{t.speaker}</b> · {t.title}</span>
+                </li>
+              ))}
+              {e.talks.length === 0 && <li class="note"># {e.note}</li>}
+            </ul>
+            {e.hosts.length > 0 && <p class="c-meta">Co-authored-by: {e.hosts.join(', ')}</p>}
+            {[...e.sponsors, ...e.partners].length > 0 && <p class="c-meta">Thanks-to: {[...e.sponsors, ...e.partners].join(', ')}</p>}
+          </li>
+        ))}
+      </ol>
+      <p class="empty" data-b-empty hidden>Brak wyników. Może to Twój temat na następną edycję? <a href="#b-cfp">Zgłoś go →</a></p>
+    </section>
+
+    <section class="cfp" id="b-cfp">
+      <p class="cmd"><span class="pr">$</span> vim zgloszenie.yaml</p>
+      <form class="yaml">
+        <label><span class="k">imie_nazwisko:</span><input required /></label>
+        <label><span class="k">email:</span><input type="email" required /></label>
+        <label><span class="k">tytul:</span><input required /></label>
+        <div class="radio"><span class="k">format:</span>
+          <label><input type="radio" name="b-fmt" checked /> prelekcja</label>
+          <label><input type="radio" name="b-fmt" /> lightning</label>
+        </div>
+        <label class="block"><span class="k">abstrakt: |</span><textarea rows="4" required></textarea></label>
+        <label class="block"><span class="k">bio: |</span><textarea rows="2"></textarea></label>
+        <label class="consent"><input type="checkbox" required /><span># zgadzam się na przetwarzanie danych w celu oceny zgłoszenia</span></label>
+        <button class="btn" type="submit">[ :wq wyślij ]</button>
+      </form>
+    </section>
+
+    <section class="sub" id="b-subscribe">
+      <p class="cmd"><span class="pr">$</span> zsbit subscribe</p>
+      <form class="subform">
+        <span class="flag">--email</span>
+        <label class="sr-only" for="b-email">E-mail</label>
+        <input id="b-email" type="email" required placeholder="twoj@email.pl" />
+        <button class="btn" type="submit">[ enter ]</button>
+        <label class="consent"><input type="checkbox" required /><span># zgoda na newsletter ZS BIT, max kilka maili na edycję</span></label>
+      </form>
+    </section>
+
+    <section class="support" id="b-wesprzyj">
+      <p class="cmd"><span class="pr">$</span> cat WESPRZYJ.md</p>
+      <ul>
+        <li><b>Osoby prywatne</b>: kawa na <a href="https://suppi.pl/zsbit">suppi.pl/zsbit</a></li>
+        <li><b>Firmy</b>: oferta sponsorska na <a href="mailto:zsbit.kontakt@gmail.com">zsbit.kontakt@gmail.com</a></li>
+      </ul>
+    </section>
+
+    <footer class="foot">
+      <span>ZS BIT · Szczecin</span>
+      <a href="https://www.facebook.com/ZSBIT/">facebook</a>
+      <a href="https://pl.linkedin.com/company/zsbit">linkedin</a>
+      <a href="#">polityka-prywatnosci.md</a>
+    </footer>
+  </main>
+</div>
+
+<script>
+  const input = document.querySelector<HTMLInputElement>('[data-b-filter]');
+  input?.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    let any = false;
+    document.querySelectorAll<HTMLElement>('[data-b-edition]').forEach((ed) => {
+      let hit = 0;
+      ed.querySelectorAll<HTMLElement>('[data-b-talk]').forEach((t) => {
+        const ok = !q || (t.dataset.q ?? '').includes(q);
+        t.hidden = !ok;
+        if (ok) hit++;
+      });
+      ed.hidden = !!q && hit === 0;
+      if (!ed.hidden) any = true;
+    });
+    document.querySelector<HTMLElement>('[data-b-empty]')!.hidden = any;
+  });
+</script>
+
+<style>
+  .b {
+    --paper: #f3efe6; --ink: #16151a; --mute: #6c675e; --line: #d9d2c3; --pink: #e0249f; --cyan: #00a3a3; --violet: #5a22e6;
+    background: var(--paper); color: var(--ink); font: 400 15px/1.65 'JetBrains Mono', ui-monospace, monospace;
+    display: grid; grid-template-columns: 260px 1fr; min-height: 100vh;
+  }
+  .b a { color: var(--violet); }
+  .side { position: sticky; top: 0; height: 100vh; padding: 28px 24px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 32px; }
+  .logo img { filter: invert(1) hue-rotate(180deg); }
+  .side nav { display: grid; gap: 6px; }
+  .side nav a { text-decoration: none; color: var(--ink); }
+  .side nav a:hover { color: var(--pink); }
+  .side nav a::before { content: '› '; color: var(--mute); }
+  .bigbin { margin-top: auto; display: grid; gap: 0; font: 700 64px/0.95 'JetBrains Mono', monospace; color: var(--line); }
+  .bigbin .on { color: var(--pink); }
+  .main { padding: 0 clamp(16px, 5vw, 72px) 96px; max-width: 980px; }
+  section { padding: 56px 0; border-bottom: 1px dashed var(--line); }
+  .path, .cmd { color: var(--mute); margin: 0 0 18px; }
+  .pr { color: var(--pink); margin-right: 8px; }
+  .readme h1 { font: 400 clamp(44px, 7vw, 92px)/0.98 'Instrument Serif', serif; letter-spacing: -0.02em; margin: 0 0 24px; }
+  .readme h1 em { color: var(--violet); }
+  .lede { font-size: 17px; max-width: 62ch; margin: 0; }
+  .out { border-left: 3px solid var(--ink); padding: 4px 0 4px 20px; }
+  .out dl { display: grid; grid-template-columns: 110px 1fr; gap: 6px 16px; margin: 0 0 24px; }
+  .out dt { color: var(--mute); }
+  .out dt::after { content: ':'; }
+  .out dd { margin: 0; }
+  .out b { font-size: 20px; }
+  .ok { color: #11815a; }
+  .bar { display: inline-block; vertical-align: middle; width: 160px; height: 10px; border: 1px solid var(--ink); margin-right: 8px; }
+  .bar span { display: block; height: 100%; background: repeating-linear-gradient(90deg, var(--ink) 0 6px, transparent 6px 8px); }
+  .blink { animation: blink 1s steps(1) infinite; color: var(--pink); }
+  @keyframes blink { 50% { opacity: 0; } }
+  .btn { display: inline-block; font: 700 15px 'JetBrains Mono', monospace; background: var(--ink); color: var(--paper) !important; text-decoration: none; padding: 12px 16px; border: 0; cursor: pointer; margin: 0 8px 8px 0; }
+  .btn:hover { background: var(--pink); }
+  .btn.ghost { background: transparent; color: var(--ink) !important; box-shadow: inset 0 0 0 1px var(--ink); }
+  .log-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .filter { display: flex; align-items: center; border-bottom: 1px solid var(--ink); }
+  .filter input { font: inherit; background: none; border: 0; padding: 6px 4px; width: 240px; color: var(--ink); }
+  .filter input:focus { outline: none; }
+  .commits { list-style: none; padding: 0; margin: 12px 0 0; }
+  .commit { padding: 22px 0; border-top: 1px solid var(--line); }
+  .c-head { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
+  .hash { color: var(--paper); background: var(--violet); padding: 0 6px; font-weight: 700; }
+  .c-name { font: 400 28px/1 'Instrument Serif', serif; }
+  .c-date { color: var(--mute); }
+  .c-venue { color: var(--mute); margin-left: auto; font-size: 13px; }
+  .diff { list-style: none; padding: 0; margin: 12px 0 8px; display: grid; gap: 4px; }
+  .diff li { display: grid; grid-template-columns: 14px 56px 1fr; gap: 8px; font-size: 14px; }
+  .plus { color: #11815a; }
+  .kind { font-size: 11px; text-transform: uppercase; color: var(--mute); padding-top: 2px; }
+  .k-lightning { color: var(--pink); }
+  .note { color: var(--mute); display: block !important; }
+  .c-meta { margin: 0; color: var(--mute); font-size: 12px; }
+  .empty { padding: 24px 0; }
+  .yaml { display: grid; gap: 4px; background: #fffdf8; border: 1px solid var(--line); padding: 20px; counter-reset: ln; }
+  .yaml > * { counter-increment: ln; position: relative; padding-left: 40px; }
+  .yaml > *::before { content: counter(ln); position: absolute; left: 0; width: 24px; text-align: right; color: var(--line); }
+  .yaml label { display: flex; gap: 10px; align-items: baseline; }
+  .yaml .block { flex-direction: column; gap: 4px; }
+  .k { color: var(--violet); white-space: nowrap; }
+  .yaml input:not([type=radio]):not([type=checkbox]), .yaml textarea, .subform input[type=email] { font: inherit; color: var(--ink); background: transparent; border: 0; border-bottom: 1px dashed var(--mute); padding: 2px 4px; flex: 1; width: 100%; resize: vertical; }
+  .yaml input:focus, .yaml textarea:focus, .subform input:focus { outline: none; border-bottom: 1px solid var(--pink); background: #e0249f0d; }
+  .radio { display: flex; gap: 16px; flex-wrap: wrap; }
+  .radio label { gap: 6px; }
+  .consent { color: var(--mute); font-size: 13px; }
+  .yaml .btn { justify-self: start; margin-top: 12px; }
+  .yaml .btn::before { display: none; }
+  .subform { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+  .flag { color: var(--cyan); }
+  .subform input[type=email] { flex: 1 1 220px; font-size: 17px; }
+  .subform .consent { flex-basis: 100%; display: flex; gap: 8px; }
+  .support ul { margin: 0; padding-left: 20px; }
+  .foot { display: flex; flex-wrap: wrap; gap: 18px; padding: 32px 0 80px; color: var(--mute); font-size: 13px; }
+  @media (max-width: 860px) {
+    .b { grid-template-columns: 1fr; }
+    .side { position: sticky; height: auto; z-index: 5; background: var(--paper); flex-direction: row; align-items: center; padding: 12px 16px; border-right: 0; border-bottom: 1px solid var(--line); gap: 16px; overflow-x: auto; }
+    .side nav { grid-auto-flow: column; gap: 14px; font-size: 13px; white-space: nowrap; }
+    .bigbin { display: none; }
+    .logo { flex-shrink: 0; }
+    .logo img { width: 48px; height: auto; }
+    .out dl { grid-template-columns: 80px 1fr; }
+    .c-venue { margin-left: 0; }
+    .filter input { width: 100%; }
+  }
+</style>

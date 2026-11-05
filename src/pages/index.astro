@@ -1,0 +1,78 @@
+---
+/**
+ * PROTOTYP: trzy kierunki wizualne strony głównej ZS BIT, przełączane `?variant=A|B|C`
+ * oraz stan strony `?state=upcoming|between` (zapowiedziana edycja / przerwa między edycjami).
+ * Do wyrzucenia po wyborze kierunku: zwycięski wariant zostanie przepisany porządnie,
+ * a całość trafi na gałąź `prototype/visual-directions`.
+ */
+import VariantA from '../components/prototype/VariantA.astro';
+import VariantB from '../components/prototype/VariantB.astro';
+import VariantC from '../components/prototype/VariantC.astro';
+import PrototypeSwitcher from '../components/prototype/PrototypeSwitcher.astro';
+import { getEditions, stats } from '../lib/editions';
+
+const editions = await getEditions();
+const latest = editions[0];
+const props = { editions, latest, stats: stats(editions), nextBinary: (latest.number + 1).toString(2) };
+---
+
+<!doctype html>
+<html lang="pl" data-variant="A" data-state="upcoming">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ZS BIT – Spotkania branży IT w Szczecinie</title>
+    <meta name="description" content="ZS BIT – bezpłatne spotkania branży IT w Szczecinie. Prelekcje, lightning talki i networking bez rekrutacji." />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;700&display=swap"
+    />
+    <script is:inline>
+      // Ustaw wariant/stan przed pierwszym renderem, żeby nie mrugało.
+      (function () {
+        var p = new URLSearchParams(location.search);
+        var v = (p.get('variant') || 'A').toUpperCase();
+        var s = p.get('state') === 'between' ? 'between' : 'upcoming';
+        document.documentElement.dataset.variant = ['A', 'B', 'C'].indexOf(v) >= 0 ? v : 'A';
+        document.documentElement.dataset.state = s;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="variant" data-for="A"><VariantA {...props} /></div>
+    <div class="variant" data-for="B"><VariantB {...props} /></div>
+    <div class="variant" data-for="C"><VariantC {...props} /></div>
+    <PrototypeSwitcher />
+
+    <script>
+      // Prototyp: formularze jeszcze nie są podpięte do backendu.
+      document.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const msg = form.querySelector('[data-form-msg]') ?? form.appendChild(Object.assign(document.createElement('p'), { className: 'form-msg' }));
+        msg.setAttribute('data-form-msg', '');
+        msg.textContent = 'Prototyp: formularz jeszcze nie wysyła danych. Backend dojdzie w fazie 2.';
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  img { max-width: 100%; display: block; }
+  .variant { display: none; }
+  html[data-variant='A'] .variant[data-for='A'],
+  html[data-variant='B'] .variant[data-for='B'],
+  html[data-variant='C'] .variant[data-for='C'] { display: block; }
+  html[data-state='upcoming'] .only-between,
+  html[data-state='between'] .only-upcoming { display: none !important; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .form-msg { margin: 12px 0 0; font-size: 14px; opacity: 0.85; }
+  .demo-tag { font: 500 11px/1 'JetBrains Mono', monospace; letter-spacing: 0.04em; opacity: 0.6; }
+</style>

@@ -1,0 +1,10 @@
+number: 5
+name: "Teleportacja"
+date: 2022-05-23
+banner: /img/editions/101.jpg
+venue: { name: "Bar Czysty", address: "Księcia Bogusława X 8, Szczecin" }
+hosts: ["Hubert Taler", "Łukasz Roszak"]
+talks:
+  - { speaker: "Tomasz Lisowski", title: "CI/CD złożonych systemów informatycznych" }
+  - { speaker: "Adam Bania", title: "Wstęp do wstępu do przetwarzania kwantowego" }
+partners: ["Demant Polska", "Tietoevry", "Klaster IT Pomorze Zachodnie"]

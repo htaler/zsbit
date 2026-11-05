@@ -1,0 +1,73 @@
+---
+// PROTOTYP: pływający przełącznik wariantów. Celowo widoczny także w buildzie produkcyjnym,
+// bo demo stoi na Netlify. Nie przenosić do docelowej strony.
+const variants = [
+  { key: 'A', name: 'Noc' },
+  { key: 'B', name: 'Changelog' },
+  { key: 'C', name: 'Bento' },
+];
+---
+
+<div class="proto-bar" role="toolbar" aria-label="Przełącznik prototypu">
+  <button type="button" data-step="-1" aria-label="Poprzedni wariant">←</button>
+  <span class="label" aria-live="polite">
+    {variants.map((v) => <span data-label={v.key}><b>{v.key}</b> {v.name}</span>)}
+  </span>
+  <button type="button" data-step="1" aria-label="Następny wariant">→</button>
+  <span class="sep"></span>
+  <button type="button" class="state" data-toggle-state>
+    <span data-state-label="upcoming">stan: edycja zapowiedziana</span>
+    <span data-state-label="between">stan: między edycjami</span>
+  </button>
+</div>
+
+<script define:vars={{ keys: variants.map((v) => v.key) }}>
+  const root = document.documentElement;
+  const sync = () => {
+    const url = new URL(location.href);
+    url.searchParams.set('variant', root.dataset.variant);
+    url.searchParams.set('state', root.dataset.state);
+    history.replaceState(null, '', url);
+  };
+  const step = (d) => {
+    const i = keys.indexOf(root.dataset.variant);
+    root.dataset.variant = keys[(i + d + keys.length) % keys.length];
+    sync();
+    window.scrollTo({ top: 0 });
+  };
+  document.querySelectorAll('.proto-bar [data-step]').forEach((b) => b.addEventListener('click', () => step(Number(b.dataset.step))));
+  document.querySelector('.proto-bar [data-toggle-state]').addEventListener('click', () => {
+    root.dataset.state = root.dataset.state === 'between' ? 'upcoming' : 'between';
+    sync();
+  });
+  document.addEventListener('keydown', (e) => {
+    const t = e.target;
+    if (t instanceof HTMLElement && (t.closest('input, textarea, select, [contenteditable]'))) return;
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  });
+</script>
+
+<style>
+  .proto-bar {
+    position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 9999;
+    display: flex; align-items: center; gap: 6px; padding: 6px;
+    background: #0b0b0b; color: #fff; border: 1px solid #fff3; border-radius: 999px;
+    box-shadow: 0 10px 30px #0006; font: 500 13px/1 'JetBrains Mono', ui-monospace, monospace;
+    max-width: calc(100vw - 24px);
+  }
+  button { all: unset; cursor: pointer; padding: 8px 12px; border-radius: 999px; background: #ffffff14; white-space: nowrap; }
+  button:hover { background: #ffffff2e; }
+  button:focus-visible { outline: 2px solid #ffd400; }
+  .label { min-width: 120px; text-align: center; padding: 0 4px; white-space: nowrap; }
+  .label b { color: #ffd400; }
+  .label [data-label] { display: none; }
+  :global(html[data-variant='A']) .label [data-label='A'],
+  :global(html[data-variant='B']) .label [data-label='B'],
+  :global(html[data-variant='C']) .label [data-label='C'] { display: inline; }
+  .sep { width: 1px; align-self: stretch; background: #fff3; margin: 0 2px; }
+  [data-state-label] { display: none; }
+  :global(html[data-state='upcoming']) [data-state-label='upcoming'],
+  :global(html[data-state='between']) [data-state-label='between'] { display: inline; }
+  @media (max-width: 560px) { .state { font-size: 11px; padding: 8px; } .label { min-width: 0; } }
+</style>

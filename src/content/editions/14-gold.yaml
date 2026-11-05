@@ -1,0 +1,14 @@
+number: 14
+name: "Gold"
+date: 2025-06-02
+venue: { name: "Technopark Pomerania", address: "ul. Cyfrowa 6, Szczecin" }
+banner: /img/editions/1110.jpg
+hosts: ["Magdalena Milewska", "Paweł Sukiennik"]
+talks:
+  - { speaker: "Szymon Jeż", title: "Oszustwo na testera", kind: lightning }
+  - { speaker: "Dawcy Pikseli", title: "Debugowanie bez debuggera – jak radzili sobie twórcy gier retro", kind: lightning }
+  - { speaker: "Andrzej Oryl, Agnieszka Sobejko", title: "Na co zgadzasz się, korzystając z narzędzi AI? Przegląd regulaminów okiem prawnika" }
+  - { speaker: "Krzysztof Korozej", title: "Pipeline w ogniu, czyli ataki na infrastrukturę CI/CD" }
+  - { speaker: "Piotr Kołakowski", title: "Automatyzacja bez programisty. Jak biznes może sam stworzyć roboty w UiPath" }
+  - { speaker: "Mikołaj Milewski", title: "Jak mówić, żeby nie przynudzać?" }
+partners: ["Demant Polska", "Tietoevry", "Technopark Pomerania", "Szczeciner"]

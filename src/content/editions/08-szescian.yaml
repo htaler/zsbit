@@ -1,0 +1,11 @@
+number: 8
+name: "Sześcian"
+date: 2023-05-08
+banner: /img/editions/1000.jpg
+venue: { name: "Technopark Pomerania", address: "ul. Cyfrowa 2-8, Szczecin" }
+hosts: ["Hubert Taler", "Wacław Adamczewski"]
+talks:
+  - { speaker: "Rafał Białek", title: "Progressive Web Apps" }
+  - { speaker: "Łukasz Sadłowski", title: "Jak skutecznie rozmawiać z trudnym klientem/partnerem" }
+  - { speaker: "Grzegorz Nowiński", title: "Pisanie rozszerzeń do Visual Studio Code" }
+partners: ["intive", "Demant Polska", "Unum", "Tietoevry", "Spyrosoft", "Technopark Pomerania", "Klaster IT Pomorze Zachodnie"]

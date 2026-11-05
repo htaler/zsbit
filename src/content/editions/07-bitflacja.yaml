@@ -1,0 +1,10 @@
+number: 7
+name: "Bitflacja"
+date: 2023-01-30
+banner: /img/editions/111.jpg
+venue: { name: "Technopark Pomerania", address: "ul. Cyfrowa 2-8, Szczecin" }
+hosts: ["Hubert Taler", "Łukasz Roszak"]
+talks:
+  - { speaker: "Przemysław Nogaj", title: "Why to build your next IVI system with Qt and Android Automotive OS" }
+  - { speaker: "Mikołaj Milewski", title: "Psychologiczne aspekty pracy programisty" }
+partners: ["intive", "Demant Polska", "Tietoevry", "Spyrosoft", "Klaster IT Pomorze Zachodnie"]

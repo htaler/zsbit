@@ -1,0 +1,10 @@
+number: 3
+name: "Czas leci"
+date: 2021-11-29
+banner: /img/editions/11.jpg
+venue: { name: "Klub Hormon", address: "Monte Cassino 6, Szczecin" }
+hosts: ["Hubert Taler", "Łukasz Roszak"]
+talks:
+  - { speaker: "Karolina Grzelak", title: "Jak rozmawiać z programistą" }
+  - { speaker: "Paweł Żal", title: "How time series helped to find memory leaks" }
+partners: ["Demant Polska", "Tietoevry"]

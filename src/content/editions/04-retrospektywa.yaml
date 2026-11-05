@@ -1,0 +1,10 @@
+number: 4
+name: "Retrospektywa"
+date: 2022-03-07
+banner: /img/editions/100.jpg
+venue: { name: "Klub Hormon", address: "Monte Cassino 6, Szczecin" }
+hosts: ["Hubert Taler", "Łukasz Roszak"]
+talks:
+  - { speaker: "Paweł Sukiennik", title: "Marshmallow challenge" }
+  - { speaker: "Poprzedni prelegenci", title: "Panel dyskusyjny", kind: panel }
+partners: ["Demant Polska", "Tietoevry", "Klaster IT Pomorze Zachodnie"]

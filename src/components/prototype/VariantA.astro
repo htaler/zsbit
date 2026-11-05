@@ -1,0 +1,234 @@
+---
+// PROTOTYP: Wariant A „Noc”. Ciemny, kinowy hero kontynuujący styl banerów edycji 10010.
+import type { Edition } from '../../lib/editions';
+import { fmtDate } from '../../lib/editions';
+interface Props { editions: Edition[]; latest: Edition; stats: { editions: number; talks: number; speakers: number; since: number }; nextBinary: string }
+const { editions, latest, stats, nextBinary } = Astro.props;
+const time = latest.date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Warsaw' });
+---
+
+<div class="a">
+  <header class="nav">
+    <a href="#" class="brand"><img src="/img/logo.svg" alt="ZS BIT" width="64" height="43" /></a>
+    <nav>
+      <a href="#a-archiwum">Archiwum</a>
+      <a href="#a-cfp">Zgłoś prelekcję</a>
+      <a href="#a-wesprzyj">Wesprzyj</a>
+    </nav>
+    <a class="btn btn-sm only-upcoming" href="#a-rejestracja">Rejestracja</a>
+    <a class="btn btn-sm only-between" href="#a-newsletter">Newsletter</a>
+  </header>
+
+  <section class="hero">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="hero-in">
+      <div class="only-upcoming">
+        <p class="kicker">ZS BIT <span class="bin">{latest.binary}</span> · edycja #{latest.number}</p>
+        <h1>{latest.name}</h1>
+        <p class="meta">{latest.venue?.name}<i>•</i>{fmtDate(latest.date)}<i>•</i>{time}</p>
+        <div class="cta-row" id="a-rejestracja">
+          <a class="btn" href={latest.registrationUrl}>Zarezerwuj bezpłatne miejsce</a>
+          <span class="seats"><b>37</b> z 120 miejsc wolnych <span class="demo-tag">dane przykładowe</span></span>
+        </div>
+      </div>
+      <div class="only-between">
+        <p class="kicker">ZS BIT <span class="bin">{nextBinary}</span> · w przygotowaniu</p>
+        <h1 class="h1-between">Kolejna edycja<br />już się kompiluje.</h1>
+        <p class="lead">Datę ogłosimy najpierw w newsletterze. Zapisz się, a jeśli masz temat, zgłoś prelekcję.</p>
+        <form class="inline-form" id="a-newsletter">
+          <label class="sr-only" for="a-nl-email">E-mail</label>
+          <input id="a-nl-email" type="email" required placeholder="twoj@email.pl" />
+          <button class="btn" type="submit">Daj mi znać</button>
+          <label class="consent"><input type="checkbox" required /> Zgadzam się na otrzymywanie newslettera ZS BIT. Wypiszesz się jednym kliknięciem.</label>
+        </form>
+        <a class="link-arrow" href="#a-cfp">Zgłoś prelekcję →</a>
+      </div>
+    </div>
+    <dl class="stats">
+      <div><dt>edycji</dt><dd>{stats.editions}</dd></div>
+      <div><dt>wystąpień</dt><dd>{stats.talks}</dd></div>
+      <div><dt>prelegentów</dt><dd>{stats.speakers}</dd></div>
+      <div><dt>w Szczecinie od</dt><dd>{stats.since}</dd></div>
+    </dl>
+  </section>
+
+  <section class="rules">
+    <h2>Trzy zasady, których się trzymamy</h2>
+    <ol>
+      <li><b>Bezpłatnie.</b> Płacą sponsorzy, Ty się tylko rejestrujesz, bo miejsc jest ograniczona liczba.</li>
+      <li><b>Bez rekrutacji.</b> Przychodzisz po wiedzę i ludzi, nie po telefon od rekrutera.</li>
+      <li><b>Bez gier na telefonach.</b> Prelekcje, Q&amp;A i rozmowy. Konkursy są, ale analogowe.</li>
+    </ol>
+  </section>
+
+  <section class="archive" id="a-archiwum">
+    <div class="sec-head">
+      <h2>Archiwum edycji</h2>
+      <p>Od <span class="bin">001</span> do <span class="bin">{latest.binary}</span>. Przewiń w bok.</p>
+    </div>
+    <div class="rail">
+      {editions.map((e) => (
+        <article class="card">
+          <img src={e.banner} alt="" loading="lazy" />
+          <div class="card-body">
+            <p class="card-k"><span class="bin">{e.binary}</span> · {fmtDate(e.date)}</p>
+            <h3>{e.name}</h3>
+            {e.talks.length > 0 ? (
+              <ul>
+                {e.talks.slice(0, 3).map((t) => <li><b>{t.speaker}</b> {t.title}</li>)}
+                {e.talks.length > 3 && <li class="more">+ {e.talks.length - 3} więcej</li>}
+              </ul>
+            ) : <p class="muted">{e.note}</p>}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="cfp" id="a-cfp">
+    <div>
+      <h2>Masz temat? <span class="hl">Wystąp na ZS BIT.</span></h2>
+      <p>Szukamy prelekcji i lightning talków: technicznych, miękkich i zupełnie nieoczywistych. Doświadczenie sceniczne nie jest wymagane, pomożemy dopracować temat.</p>
+      <ul class="formats">
+        <li><b>Prelekcja</b> pełne wystąpienie z Q&amp;A</li>
+        <li><b>Lightning talk</b> krótko, z pasją, na jeden temat</li>
+      </ul>
+    </div>
+    <form class="form">
+      <div class="row2">
+        <label>Imię i nazwisko<input required /></label>
+        <label>E-mail<input type="email" required /></label>
+      </div>
+      <label>Tytuł wystąpienia<input required /></label>
+      <fieldset class="seg">
+        <legend>Format</legend>
+        <label><input type="radio" name="a-fmt" checked /> Prelekcja</label>
+        <label><input type="radio" name="a-fmt" /> Lightning talk</label>
+      </fieldset>
+      <label>O czym opowiesz?<textarea rows="4" required></textarea></label>
+      <label>Kilka zdań o Tobie<textarea rows="2"></textarea></label>
+      <label class="consent"><input type="checkbox" required /> Zgadzam się na przetwarzanie danych w celu oceny zgłoszenia (polityka prywatności).</label>
+      <button class="btn" type="submit">Wyślij zgłoszenie</button>
+    </form>
+  </section>
+
+  <section class="support" id="a-wesprzyj">
+    <article>
+      <h3>Postaw nam kawę</h3>
+      <p>Wspierasz jako osoba prywatna? Każda kawa na Suppi to realny wkład w kolejną edycję.</p>
+      <a class="link-arrow" href="https://suppi.pl/zsbit">suppi.pl/zsbit →</a>
+    </article>
+    <article>
+      <h3>Zostań sponsorem</h3>
+      <p>Firmy zapraszamy do współpracy. Wyślemy ofertę sponsorską.</p>
+      <a class="link-arrow" href="mailto:zsbit.kontakt@gmail.com">zsbit.kontakt@gmail.com →</a>
+    </article>
+    <article class="only-upcoming">
+      <h3>Newsletter</h3>
+      <form class="inline-form small">
+        <label class="sr-only" for="a-nl2">E-mail</label>
+        <input id="a-nl2" type="email" required placeholder="twoj@email.pl" />
+        <button class="btn btn-sm" type="submit">Zapisz</button>
+      </form>
+    </article>
+  </section>
+
+  <footer class="foot">
+    <img src="/img/logo.svg" alt="ZS BIT" width="56" height="38" />
+    <span>Spotkania branży IT · Szczecin</span>
+    <span class="links"><a href="https://www.facebook.com/ZSBIT/">Facebook</a><a href="https://pl.linkedin.com/company/zsbit">LinkedIn</a><a href="#">Polityka prywatności</a></span>
+  </footer>
+</div>
+
+<style>
+  .a {
+    --bg: #0b0d2a; --bg2: #14123d; --ink: #f3f1ff; --mute: #a7a3d6; --accent: #ff9a2e; --violet: #6b30ff; --cyan: #00d4d4;
+    background: var(--bg); color: var(--ink); font: 400 17px/1.6 'Inter Tight', system-ui, sans-serif; min-height: 100vh; overflow-x: clip;
+  }
+  .a a { color: inherit; }
+  h1, h2, h3 { font-family: 'Bricolage Grotesque', sans-serif; letter-spacing: -0.02em; line-height: 1; margin: 0; }
+  .bin { font-family: 'JetBrains Mono', monospace; color: var(--cyan); }
+  .nav { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 24px; padding: 14px clamp(16px, 4vw, 48px); background: #0b0d2acc; backdrop-filter: blur(12px); border-bottom: 1px solid #ffffff12; }
+  .nav nav { display: flex; gap: 24px; margin-left: auto; font-size: 15px; }
+  .nav nav a { text-decoration: none; color: var(--mute); }
+  .nav nav a:hover { color: var(--ink); }
+  .btn { display: inline-block; background: var(--accent); color: #1a0f3a !important; font-weight: 600; text-decoration: none; padding: 14px 26px; border-radius: 999px; border: 0; font: inherit; font-weight: 600; cursor: pointer; transition: transform .15s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-sm { padding: 9px 18px; font-size: 15px; }
+  .hero { position: relative; min-height: calc(100svh - 72px); display: grid; align-content: end; padding: 12vh clamp(16px, 4vw, 48px) 40px; isolation: isolate; }
+  .glow { position: absolute; inset: 0; z-index: -1; background:
+      radial-gradient(40% 50% at 78% 38%, #ff8a1f55, transparent 70%),
+      radial-gradient(50% 60% at 88% 70%, #6b30ff66, transparent 70%),
+      radial-gradient(60% 60% at 10% 0%, #1d2a8a88, transparent 70%); filter: saturate(1.2); }
+  .glow::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(#ffffff22 1px, transparent 1px); background-size: 22px 22px; mask-image: linear-gradient(to left, #000, transparent 60%); }
+  .kicker { font: 500 14px/1 'JetBrains Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); margin: 0 0 20px; }
+  .hero h1 { font-size: clamp(72px, 16vw, 220px); font-weight: 800; letter-spacing: -0.05em; }
+  .hero .h1-between { font-size: clamp(48px, 8vw, 112px); }
+  .meta { font-size: clamp(20px, 2.6vw, 30px); margin: 18px 0 32px; color: var(--ink); }
+  .meta i { color: var(--accent); font-style: normal; margin: 0 .5em; }
+  .lead { font-size: 20px; color: var(--mute); max-width: 36ch; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 18px 28px; align-items: center; }
+  .seats { color: var(--mute); }
+  .seats b { color: var(--ink); font-size: 22px; }
+  .inline-form { display: flex; flex-wrap: wrap; gap: 10px; max-width: 560px; }
+  .inline-form input[type=email] { flex: 1 1 240px; padding: 14px 20px; border-radius: 999px; border: 1px solid #ffffff30; background: #ffffff0d; color: var(--ink); font: inherit; }
+  .consent { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--mute); line-height: 1.4; }
+  .link-arrow { display: inline-block; margin-top: 22px; color: var(--accent) !important; text-decoration: none; font-weight: 600; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 64px 0 0; padding-top: 24px; border-top: 1px solid #ffffff1c; }
+  .stats div { margin: 0; }
+  .stats dt { color: var(--mute); font-size: 14px; }
+  .stats dd { margin: 0; font: 700 clamp(28px, 4vw, 48px)/1 'Bricolage Grotesque', sans-serif; order: -1; }
+  .stats div { display: flex; flex-direction: column-reverse; }
+  section { padding: 96px clamp(16px, 4vw, 48px); }
+  .rules h2 { font-size: clamp(28px, 4vw, 44px); max-width: 16ch; margin-bottom: 40px; }
+  .rules ol { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; padding: 0; margin: 0; list-style: none; counter-reset: r; }
+  .rules li { counter-increment: r; color: var(--mute); border-top: 2px solid var(--violet); padding-top: 18px; }
+  .rules li::before { content: '0' counter(r); display: block; font: 500 13px 'JetBrains Mono', monospace; color: var(--cyan); margin-bottom: 10px; }
+  .rules li b { color: var(--ink); display: block; font: 700 24px/1.2 'Bricolage Grotesque', sans-serif; margin-bottom: 6px; }
+  .archive { background: var(--bg2); padding-right: 0; }
+  .sec-head { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 12px; padding-right: clamp(16px, 4vw, 48px); margin-bottom: 32px; }
+  .sec-head h2 { font-size: clamp(32px, 5vw, 56px); }
+  .sec-head p { color: var(--mute); margin: 0; }
+  .rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(280px, 340px); gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 clamp(16px, 4vw, 48px) 24px 0; scrollbar-color: var(--violet) transparent; }
+  .card { scroll-snap-align: start; background: #ffffff08; border: 1px solid #ffffff14; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; }
+  .card img { aspect-ratio: 2 / 1; object-fit: cover; width: 100%; }
+  .card-body { padding: 18px 20px 22px; }
+  .card-k { font-size: 13px; color: var(--mute); margin: 0 0 6px; }
+  .card h3 { font-size: 28px; margin-bottom: 12px; }
+  .card ul { margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.45; color: var(--mute); display: grid; gap: 8px; }
+  .card li b { display: block; color: var(--ink); font-weight: 600; }
+  .card .more { color: var(--accent); }
+  .muted { color: var(--mute); font-size: 14px; }
+  .cfp { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .cfp h2 { font-size: clamp(36px, 5vw, 64px); margin-bottom: 20px; }
+  .hl { color: var(--accent); }
+  .cfp p { color: var(--mute); font-size: 18px; }
+  .formats { list-style: none; padding: 0; display: grid; gap: 10px; }
+  .formats li { padding: 14px 18px; border: 1px solid #ffffff1c; border-radius: 14px; color: var(--mute); }
+  .formats b { color: var(--ink); margin-right: 8px; }
+  .form { display: grid; gap: 16px; background: #ffffff08; border: 1px solid #ffffff14; border-radius: 24px; padding: clamp(20px, 3vw, 32px); }
+  .form label { display: grid; gap: 6px; font-size: 14px; color: var(--mute); }
+  .form input:not([type=checkbox]):not([type=radio]), .form textarea { font: inherit; color: var(--ink); background: #0b0d2a; border: 1px solid #ffffff24; border-radius: 12px; padding: 12px 14px; }
+  .form input:focus, .form textarea:focus, .inline-form input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .form .consent { display: flex; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .seg { border: 0; padding: 0; margin: 0; display: flex; gap: 10px; flex-wrap: wrap; }
+  .seg legend { font-size: 14px; color: var(--mute); margin-bottom: 6px; }
+  .seg label { display: flex; flex-direction: row; align-items: center; gap: 8px; padding: 10px 16px; border: 1px solid #ffffff24; border-radius: 999px; color: var(--ink); cursor: pointer; }
+  .seg label:has(input:checked) { border-color: var(--accent); background: #ff9a2e1a; }
+  .form .btn { justify-self: start; }
+  .support { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; border-top: 1px solid #ffffff12; }
+  .support article { padding: 28px; border-radius: 20px; background: linear-gradient(160deg, #6b30ff22, transparent); border: 1px solid #ffffff14; }
+  .support h3 { font-size: 26px; margin-bottom: 10px; }
+  .support p { color: var(--mute); margin: 0; }
+  .inline-form.small { margin-top: 16px; }
+  .foot { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; padding: 32px clamp(16px, 4vw, 48px) 96px; color: var(--mute); font-size: 14px; border-top: 1px solid #ffffff12; }
+  .foot .links { margin-left: auto; display: flex; gap: 20px; }
+  @media (max-width: 820px) {
+    .nav nav { display: none; }
+    .nav .btn { margin-left: auto; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .rules ol, .cfp, .row2 { grid-template-columns: 1fr; }
+    .foot .links { margin-left: 0; }
+  }
+</style>

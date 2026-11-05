@@ -1,0 +1,10 @@
+number: 2
+name: "Do przodu"
+date: 2021-09-06
+banner: /img/editions/10.jpg
+venue: { name: "Klub Hormon", address: "Monte Cassino 6, Szczecin" }
+hosts: ["Hubert Taler", "Łukasz Roszak"]
+talks:
+  - { speaker: "Paweł Sołtysiak", title: "Jak stracić przyjaciół w stu liniach PowerShella" }
+  - { speaker: "Łukasz Roszak", title: "Let it go" }
+partners: ["Demant Polska", "Tietoevry"]

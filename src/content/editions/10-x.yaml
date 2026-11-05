@@ -1,0 +1,12 @@
+number: 10
+name: "X"
+date: 2024-01-29
+banner: /img/editions/1010.png
+venue: { name: "Technopark Pomerania", address: "ul. Cyfrowa 6, Szczecin" }
+hosts: ["Paweł Żal", "Joanna Rogańska-Gałka"]
+talks:
+  - { speaker: "Mikołaj Milewski", title: "Rozproszone aplikacje z .NET Aspire" }
+  - { speaker: "Marek Macko", title: "Weź swoją aplikację androidową i zrób z niej aplikację multiplatformową z użyciem Compose" }
+  - { speaker: "Kamila Borowa", title: "Jak rozwijać kompetencje zasilane talentami. Gallup w IT" }
+  - { speaker: "Krzysztof Korozej", title: "Mroczna strona NPM-a – ataki na łańcuchy dostaw w ekosystemie JS" }
+partners: ["Demant Polska", "Tietoevry", "OpenEDG", "Wise Rise", "Technopark Pomerania", "Klaster IT"]

@@ -1,0 +1,11 @@
+number: 12
+name: "Piekarnik"
+date: 2024-09-23
+banner: /img/editions/1100.png
+venue: { name: "Technopark Pomerania", address: "ul. Cyfrowa 6, Szczecin" }
+hosts: ["Paweł Żal", "Mikołaj Milewski"]
+talks:
+  - { speaker: "Kamil Twarogal", title: "Infra jako kod – postaw całe środowisko w Terraform" }
+  - { speaker: "Milena Michalska", title: "Pies czy babeczka? Jak sztuczna inteligencja identyfikuje obiekty?" }
+  - { speaker: "Hubert Taler", title: "Zabójcze szczepionki i ludzie-jaszczury! Czy to wina Internetu, że wierzymy w głupoty?" }
+partners: ["Demant Polska", "Tietoevry", "Technopark Pomerania", "Klaster IT"]

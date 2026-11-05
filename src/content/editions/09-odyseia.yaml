@@ -1,0 +1,12 @@
+number: 9
+name: "OdyseIA"
+date: 2023-10-25
+banner: /img/editions/1001.png
+venue: { name: "Technopark Pomerania", address: "ul. Cyfrowa 6, Szczecin" }
+hosts: ["Łukasz Roszak", "Joanna Rogańska-Gałka"]
+talks:
+  - { speaker: "Kamil Bielarczyk", title: "OCR w test automation" }
+  - { speaker: "Rafał Malujda", title: "Czy tylko AI i blockchain wpłyną na fintechy i projekty finansowe w IT w 2023 i 2024 roku?" }
+  - { speaker: "Karol Gawron", title: "Wektorowe bazy danych" }
+  - { speaker: "Marek Grzenkowicz", title: "LangChain, RAG i LLM – przeszukiwanie dokumentów przy pomocy zapytań w języku naturalnym" }
+partners: ["Demant Polska", "Tietoevry", "Spyrosoft", "Technopark Pomerania", "Klaster IT"]

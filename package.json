@@ -1,0 +1,34 @@
+{
+  "name": "zsbit",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/htaler/zsbit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/htaler/zsbit/issues"
+  },
+  "homepage": "https://github.com/htaler/zsbit#readme",
+  "dependencies": {
+    "astro": "^7.4.7"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "typescript": "^6.0.3"
+  }
+}

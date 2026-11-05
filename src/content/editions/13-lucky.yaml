@@ -1,0 +1,14 @@
+number: 13
+name: "Lucky"
+date: 2024-11-25
+banner: /img/editions/1101.png
+venue: { name: "Technopark Pomerania", address: "ul. Cyfrowa 6, Szczecin" }
+hosts: ["Paweł Żal", "Łukasz Roszak"]
+talks:
+  - { speaker: "Viola Warych", title: "Creating the future of fashion with AI", kind: lightning }
+  - { speaker: "Mikołaj Milewski", title: "One day of a developer's life", kind: lightning }
+  - { speaker: "Paweł Sukiennik", title: "Retrospective", kind: lightning }
+  - { speaker: "Dr Jodie Burchell", title: "Can you trust your (large language) model?" }
+  - { speaker: "Przemysław Samsel", title: "How to keep your internal API (un)safe" }
+  - { speaker: "Dorota Dżega-Pietruszkiewicz", title: "Zapalniki w projektach IT. Akcje i reakcje" }
+partners: ["Demant Polska", "Tietoevry", "OpenEDG", "Pru Ubezpieczenia", "Technopark Pomerania", "Klaster IT", "Szczeciner"]
