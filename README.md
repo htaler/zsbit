@@ -30,11 +30,13 @@ partners: ["Firma"]
 
 ## Status: prototyp kierunków wizualnych
 
-Strona główna to na razie **prototyp** z trzema wariantami wyglądu:
+Strona główna to na razie **prototyp** z pięcioma wariantami wyglądu:
 
 - `?variant=A`: Noc (ciemny, kinowy, kontynuacja banerów edycji)
 - `?variant=B`: Changelog (jasny, monospace, archiwum jako `git log` z wyszukiwarką)
 - `?variant=C`: Bento (kafle z akcjami, ściana prelegentów, siatka plakatów)
+- `?variant=D`: Plakat (szwajcarska typografia, ogromny numer binarny, archiwum jako indeks latami)
+- `?variant=E`: 8-bit (retro gra: edycje jako wybór poziomu, CFP jako „dołącz do drużyny”)
 
 oraz dwoma stanami: `?state=upcoming` (edycja zapowiedziana) i `?state=between` (przerwa między edycjami).
 Przełączanie: pasek na dole ekranu albo strzałki ← →. Formularze jeszcze nic nie wysyłają, a liczba wolnych miejsc to dane przykładowe.

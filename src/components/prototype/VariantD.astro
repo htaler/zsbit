@@ -1,0 +1,227 @@
+---
+// PROTOTYP: Wariant D „Plakat”. Szwajcarska typografia: biel, czerń, jeden róż, widoczna siatka,
+// ogromny numer binarny jako hero, archiwum jako tabela-indeks pogrupowana latami.
+import type { Edition } from '../../lib/editions';
+import { fmtShort } from '../../lib/editions';
+interface Props { editions: Edition[]; latest: Edition; stats: { editions: number; talks: number; speakers: number; since: number }; nextBinary: string }
+const { editions, latest, stats, nextBinary } = Astro.props;
+const time = latest.date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Warsaw' });
+const byYear = Object.entries(
+  editions.reduce<Record<string, Edition[]>>((acc, e) => {
+    (acc[e.date.getFullYear()] ??= []).push(e);
+    return acc;
+  }, {}),
+).sort((a, b) => Number(b[0]) - Number(a[0]));
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<div class="d">
+  <header class="ticker">
+    <span>ZS BIT</span><span>Spotkania branży IT</span><span>Szczecin</span><span>Od {stats.since}</span>
+    <nav><a href="#d-program">Program</a><a href="#d-indeks">Indeks</a><a href="#d-cfp">CFP</a></nav>
+  </header>
+
+  <section class="hero">
+    <div class="only-upcoming">
+      <p class="huge" aria-label={`Edycja ${latest.binary}`}>{latest.binary}</p>
+      <div class="hero-grid">
+        <h1>{latest.name}</h1>
+        <p class="cell"><small>Data</small>{fmtShort(latest.date)}</p>
+        <p class="cell"><small>Godzina</small>{time}</p>
+        <p class="cell"><small>Miejsce</small>{latest.venue?.name}</p>
+        <p class="cell"><small>Wstęp</small>Bezpłatny*</p>
+      </div>
+      <div class="hero-cta">
+        <a class="btn" href={latest.registrationUrl}>Rejestracja →</a>
+        <span class="fine">* Rejestracja obowiązkowa, liczba miejsc ograniczona. Wolne: 37/120 <span class="demo-tag">dane przykładowe</span></span>
+      </div>
+    </div>
+    <div class="only-between">
+      <p class="huge outline" aria-label={`Edycja ${nextBinary}`}>{nextBinary}</p>
+      <div class="hero-grid">
+        <h1>Wkrótce</h1>
+        <p class="cell"><small>Data</small>TBA</p>
+        <p class="cell"><small>Zgłoszenia</small>Otwarte</p>
+        <p class="cell"><small>Ostatnio</small>{latest.name}</p>
+        <p class="cell"><small>Wstęp</small>Bezpłatny</p>
+      </div>
+      <div class="hero-cta">
+        <a class="btn" href="#d-nl">Powiadom mnie →</a>
+        <a class="btn ghost" href="#d-cfp">Zgłoś prelekcję</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="program only-upcoming" id="d-program">
+    <h2 class="label">Program</h2>
+    <ol>
+      {latest.talks.map((t, i) => (
+        <li>
+          <span class="n">{pad(i + 1)}</span>
+          <span class="who">{t.speaker}</span>
+          <span class="what">{t.title}</span>
+          <span class="kind">{t.kind === 'lightning' ? 'Lightning' : t.kind === 'panel' ? 'Panel' : 'Prelekcja'}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="facts">
+    <div><b>{stats.editions}</b><span>edycji</span></div>
+    <div><b>{stats.talks}</b><span>wystąpień</span></div>
+    <div><b>{stats.speakers}</b><span>prelegentów</span></div>
+    <div><b>0</b><span>rekruterów</span></div>
+    <div><b>0 zł</b><span>za wstęp</span></div>
+  </section>
+
+  <section class="index" id="d-indeks">
+    <h2 class="label">Indeks edycji</h2>
+    {byYear.map(([year, list]) => (
+      <div class="year">
+        <h3>{year}</h3>
+        <div class="rows">
+          {list.map((e) => (
+            <details>
+              <summary>
+                <span class="bin">{e.binary}</span>
+                <span class="nm">{e.name}</span>
+                <span class="dt">{fmtShort(e.date)}</span>
+                <span class="vn">{e.venue?.name ?? '—'}</span>
+                <span class="ct">{e.talks.length || '—'}</span>
+              </summary>
+              <ul>
+                {e.talks.map((t) => <li><b>{t.speaker}</b> {t.title}</li>)}
+                {e.hosts.length > 0 && <li class="meta">Prowadzenie: {e.hosts.join(', ')}</li>}
+              </ul>
+            </details>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <section class="split">
+    <form id="d-cfp">
+      <h2 class="label">Call for papers</h2>
+      <p class="big">Twój temat na scenie ZS BIT.</p>
+      <label>Imię i nazwisko<input required /></label>
+      <label>E-mail<input type="email" required /></label>
+      <label>Tytuł<input required /></label>
+      <label>Format<select><option>Prelekcja</option><option>Lightning talk</option></select></label>
+      <label>Abstrakt<textarea rows="4" required></textarea></label>
+      <label class="consent"><input type="checkbox" required /> Zgoda na przetwarzanie danych w celu oceny zgłoszenia</label>
+      <button class="btn" type="submit">Wyślij →</button>
+    </form>
+    <div class="col2">
+      <form id="d-nl">
+        <h2 class="label">Newsletter</h2>
+        <p class="big">Daty i program, zanim trafią gdziekolwiek indziej.</p>
+        <label>E-mail<input type="email" required /></label>
+        <label class="consent"><input type="checkbox" required /> Zgoda na newsletter ZS BIT</label>
+        <button class="btn" type="submit">Zapisz →</button>
+      </form>
+      <div class="support">
+        <h2 class="label">Wsparcie</h2>
+        <p><a href="https://suppi.pl/zsbit">Kawa na Suppi ↗</a></p>
+        <p><a href="mailto:zsbit.kontakt@gmail.com">Oferta sponsorska ↗</a></p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p class="wordmark">ZS BIT</p>
+    <div class="foot-links">
+      <a href="https://www.facebook.com/ZSBIT/">Facebook</a>
+      <a href="https://pl.linkedin.com/company/zsbit">LinkedIn</a>
+      <a href="mailto:zsbit.kontakt@gmail.com">zsbit.kontakt@gmail.com</a>
+      <a href="#">Polityka prywatności</a>
+    </div>
+  </footer>
+</div>
+
+<style>
+  .d {
+    --ink: #0a0a0a; --paper: #ffffff; --pink: #ff2fb3; --rule: #0a0a0a; --mute: #6b6b6b;
+    background: var(--paper); color: var(--ink); font: 400 16px/1.5 'Archivo', 'Helvetica Neue', Arial, sans-serif; overflow-x: clip;
+    --pad: clamp(16px, 3vw, 40px);
+  }
+  .d a { color: inherit; }
+  .ticker { display: flex; flex-wrap: wrap; gap: 4px 28px; padding: 12px var(--pad); border-bottom: 2px solid var(--rule); font: 700 13px/1.2 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .ticker nav { margin-left: auto; display: flex; gap: 20px; }
+  .ticker nav a { text-decoration: none; }
+  .ticker nav a:hover { color: var(--pink); }
+  .hero { padding: 0 var(--pad) 40px; border-bottom: 2px solid var(--rule); }
+  .huge { margin: 0 -0.04em; font: 900 clamp(96px, 27vw, 420px)/0.82 'Archivo', sans-serif; font-variation-settings: 'wdth' 125; letter-spacing: -0.06em; padding-top: 0.1em; color: var(--ink); }
+  .huge.outline { color: transparent; -webkit-text-stroke: 2px var(--ink); }
+  .hero-grid { display: grid; grid-template-columns: 2fr repeat(4, 1fr); border-top: 2px solid var(--rule); margin-top: 16px; }
+  .hero-grid h1 { margin: 0; padding: 14px 16px 14px 0; font: 800 clamp(40px, 6vw, 88px)/0.95 'Archivo', sans-serif; font-variation-settings: 'wdth' 75; color: var(--pink); text-transform: uppercase; }
+  .cell { margin: 0; padding: 14px 16px; border-left: 1px solid var(--rule); font: 700 clamp(18px, 2vw, 26px)/1.1 'Archivo', sans-serif; font-variation-settings: 'wdth' 75; text-transform: uppercase; }
+  .cell small { display: block; font: 500 11px/1 'Archivo', sans-serif; letter-spacing: 0.1em; color: var(--mute); margin-bottom: 8px; font-variation-settings: 'wdth' 100; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; margin-top: 28px; }
+  .btn { display: inline-block; background: var(--ink); color: var(--paper) !important; font: 800 18px/1 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; padding: 18px 28px; text-decoration: none; border: 2px solid var(--ink); cursor: pointer; }
+  .btn:hover { background: var(--pink); border-color: var(--pink); }
+  .btn.ghost { background: transparent; color: var(--ink) !important; }
+  .btn.ghost:hover { color: var(--paper) !important; }
+  .fine { font-size: 13px; color: var(--mute); max-width: 48ch; }
+  section { padding: 56px var(--pad); border-bottom: 2px solid var(--rule); }
+  .label { font: 700 13px/1 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 24px; }
+  .label::before { content: '■ '; color: var(--pink); }
+  .program ol { list-style: none; margin: 0; padding: 0; }
+  .program li { display: grid; grid-template-columns: 64px 1fr 2fr 120px; gap: 16px; align-items: baseline; padding: 18px 0; border-top: 1px solid var(--rule); }
+  .program .n { font: 900 28px/1 'Archivo', sans-serif; color: var(--pink); }
+  .program .who { font: 800 clamp(20px, 2.4vw, 32px)/1.05 'Archivo', sans-serif; font-variation-settings: 'wdth' 75; text-transform: uppercase; }
+  .program .what { font-size: clamp(17px, 1.6vw, 22px); line-height: 1.3; }
+  .program .kind { font: 600 12px 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: 0.08em; text-align: right; color: var(--mute); }
+  .facts { display: grid; grid-template-columns: repeat(5, 1fr); padding: 0; }
+  .facts div { padding: 28px var(--pad); border-left: 1px solid var(--rule); }
+  .facts div:first-child { border-left: 0; }
+  .facts b { display: block; font: 900 clamp(40px, 6vw, 88px)/0.9 'Archivo', sans-serif; font-variation-settings: 'wdth' 75; }
+  .facts span { font: 600 12px 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mute); }
+  .year { display: grid; grid-template-columns: 160px 1fr; gap: 16px; border-top: 2px solid var(--rule); }
+  .year h3 { margin: 0; padding-top: 10px; font: 900 48px/1 'Archivo', sans-serif; font-variation-settings: 'wdth' 75; }
+  .rows details { border-bottom: 1px solid #0a0a0a33; }
+  .rows details:last-child { border-bottom: 0; }
+  .rows summary { display: grid; grid-template-columns: 90px 1.4fr 110px 1.2fr 40px; gap: 12px; padding: 14px 0; cursor: pointer; list-style: none; align-items: baseline; }
+  .rows summary::-webkit-details-marker { display: none; }
+  .rows summary:hover .nm, details[open] .nm { color: var(--pink); }
+  .bin { font: 500 14px 'JetBrains Mono', monospace; }
+  .nm { font: 800 22px/1.1 'Archivo', sans-serif; font-variation-settings: 'wdth' 75; text-transform: uppercase; }
+  .dt, .vn { color: var(--mute); font-size: 14px; }
+  .ct { text-align: right; font-weight: 700; }
+  .rows ul { list-style: none; margin: 0; padding: 0 0 18px 102px; display: grid; gap: 6px; font-size: 15px; }
+  .rows ul b { margin-right: 8px; }
+  .rows .meta { color: var(--mute); font-size: 13px; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; padding: 0; }
+  .split > * { padding: 56px var(--pad); }
+  .col2 { border-left: 2px solid var(--rule); display: grid; gap: 56px; align-content: start; }
+  .big { font: 800 clamp(28px, 3vw, 44px)/1.02 'Archivo', sans-serif; font-variation-settings: 'wdth' 75; text-transform: uppercase; margin: 0 0 28px; max-width: 18ch; }
+  .split form { display: grid; gap: 16px; align-content: start; }
+  .split label { display: grid; gap: 4px; font: 600 12px 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .split input:not([type=checkbox]), .split select, .split textarea { font: 400 18px 'Archivo', sans-serif; border: 0; border-bottom: 2px solid var(--ink); padding: 8px 0; background: transparent; color: var(--ink); border-radius: 0; resize: vertical; }
+  .split input:focus, .split select:focus, .split textarea:focus { outline: none; border-color: var(--pink); }
+  .consent { display: flex !important; gap: 8px; align-items: flex-start; text-transform: none !important; letter-spacing: 0 !important; font-weight: 400 !important; font-size: 13px !important; color: var(--mute); }
+  .split .btn { justify-self: start; }
+  .support p { margin: 0 0 8px; font: 800 24px 'Archivo', sans-serif; font-variation-settings: 'wdth' 75; text-transform: uppercase; }
+  .support a { text-decoration: none; border-bottom: 3px solid var(--pink); }
+  .foot { padding: 32px var(--pad) 96px; border-bottom: 0; }
+  .wordmark { margin: 0; font: 900 clamp(80px, 22vw, 340px)/0.8 'Archivo', sans-serif; font-variation-settings: 'wdth' 125; letter-spacing: -0.05em; }
+  .foot-links { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 24px; font: 600 13px 'Archivo', sans-serif; text-transform: uppercase; letter-spacing: 0.06em; }
+  @media (max-width: 860px) {
+    .ticker nav { display: none; }
+    .hero-grid { grid-template-columns: 1fr 1fr; }
+    .hero-grid h1 { grid-column: 1 / -1; }
+    .hero-grid .cell:nth-of-type(odd) { border-left: 0; padding-left: 0; }
+    .hero-grid .cell { border-top: 1px solid var(--rule); }
+    .program li { grid-template-columns: 44px 1fr; }
+    .program .what { grid-column: 2; }
+    .program .kind { grid-column: 2; text-align: left; }
+    .facts { grid-template-columns: repeat(2, 1fr); }
+    .facts div { border-left: 0; border-top: 1px solid var(--rule); }
+    .year { grid-template-columns: 1fr; gap: 0; }
+    .rows summary { grid-template-columns: 70px 1fr 40px; }
+    .rows .dt, .rows .vn { display: none; }
+    .rows ul { padding-left: 0; }
+    .split { grid-template-columns: 1fr; }
+    .col2 { border-left: 0; border-top: 2px solid var(--rule); }
+  }
+</style>

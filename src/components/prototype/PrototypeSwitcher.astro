@@ -5,6 +5,8 @@ const variants = [
   { key: 'A', name: 'Noc' },
   { key: 'B', name: 'Changelog' },
   { key: 'C', name: 'Bento' },
+  { key: 'D', name: 'Plakat' },
+  { key: 'E', name: '8-bit' },
 ];
 ---
 
@@ -64,7 +66,9 @@ const variants = [
   .label [data-label] { display: none; }
   :global(html[data-variant='A']) .label [data-label='A'],
   :global(html[data-variant='B']) .label [data-label='B'],
-  :global(html[data-variant='C']) .label [data-label='C'] { display: inline; }
+  :global(html[data-variant='C']) .label [data-label='C'],
+  :global(html[data-variant='D']) .label [data-label='D'],
+  :global(html[data-variant='E']) .label [data-label='E'] { display: inline; }
   .sep { width: 1px; align-self: stretch; background: #fff3; margin: 0 2px; }
   [data-state-label] { display: none; }
   :global(html[data-state='upcoming']) [data-state-label='upcoming'],
